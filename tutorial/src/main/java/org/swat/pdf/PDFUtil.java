@@ -41,9 +41,7 @@ public class PDFUtil {
 
             int keyLength = 128;
 
-            AccessPermission ap = new AccessPermission();
-
-            ap.setCanPrint(true);
+            AccessPermission ap =  AccessPermission.getOwnerAccessPermission();
 
             StandardProtectionPolicy spp = new StandardProtectionPolicy("", "", ap);
             spp.setEncryptionKeyLength(keyLength);
