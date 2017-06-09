@@ -17,8 +17,8 @@ import java.util.Properties;
  * on 25/11/14.
  */
 public class PropertyPlaceHolder extends PropertyPlaceholderConfigurer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyPlaceHolder.class);
     public static final String CONFIG_VARIABLE = "ENV_CONF";
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyPlaceHolder.class);
 
     public PropertyPlaceHolder() throws Exception {
         setSystemPropertiesMode(SYSTEM_PROPERTIES_MODE_OVERRIDE);

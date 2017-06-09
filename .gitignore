@@ -28,3 +28,4 @@ dist
 .idea/*
 node_modules
 deploy
+.idea/
