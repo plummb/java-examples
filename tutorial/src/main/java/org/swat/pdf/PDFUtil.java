@@ -21,9 +21,6 @@ public class PDFUtil {
             System.out.println("inFile cannot be null");
             return;
         }
-        if (outFile == null) {
-            outFile = "Decrypt-" + inFile;
-        }
         if (password == null) {
             password = "";
         }
@@ -41,13 +38,19 @@ public class PDFUtil {
 
             int keyLength = 128;
 
-            AccessPermission ap =  AccessPermission.getOwnerAccessPermission();
+            AccessPermission ap = AccessPermission.getOwnerAccessPermission();
 
             StandardProtectionPolicy spp = new StandardProtectionPolicy("", "", ap);
             spp.setEncryptionKeyLength(keyLength);
             spp.setPermissions(ap);
             document.protect(spp);
-            File saveAs = new File(outFile);
+            File saveAs;
+            if (outFile == null) {
+                File file = new File(inFile);
+                saveAs = new File(file.getParentFile(), "Decrypt-" + file.getName());
+            } else {
+                saveAs = new File(outFile);
+            }
             document.save(saveAs);
         } catch (InvalidPasswordException e) {
             throw e;
