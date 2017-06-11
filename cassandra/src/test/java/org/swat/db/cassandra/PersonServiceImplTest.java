@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"org.swat.db.cassandra"})
+@ComponentScan(basePackages = {"org.swat.cassandra"})
 public class PersonServiceImplTest {
     @Autowired
     private PersonServiceImpl personService;
