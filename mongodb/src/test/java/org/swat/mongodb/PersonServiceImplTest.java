@@ -1,4 +1,4 @@
-package org.swat.db.mongodb;
+package org.swat.mongodb;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by swat
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"org.swat.db.mongodb"})
+@ComponentScan(basePackages = {"org.swat.mongodb"})
 public class PersonServiceImplTest {
     @Autowired
     private PersonServiceImpl personService;

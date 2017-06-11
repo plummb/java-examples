@@ -1,4 +1,4 @@
-package org.swat.db.mongodb;
+package org.swat.mongodb;
 
 import org.springframework.data.annotation.Id;
 

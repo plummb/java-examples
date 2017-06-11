@@ -1,4 +1,4 @@
-package org.swat.db.mongodb;
+package org.swat.db.cassandra;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ public class PersonServiceImpl {
     @Autowired
     private PersonRepository personRepository;
 
-    public Person insert(Person person){
+    public Person insert(Person person) {
         person.setId(UUID.randomUUID().toString());
-        personRepository.insert(person);
+        personRepository.save(person);
         return person;
     }
 
     public Person findById(String id) {
-        return personRepository.findOne(id);
+        return null;
     }
 }

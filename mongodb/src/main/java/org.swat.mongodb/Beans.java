@@ -1,4 +1,4 @@
-package org.swat.db.mongodb;
+package org.swat.mongodb;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * on 11/6/17.
  */
 @Configuration
-@EnableMongoRepositories(basePackages = "org.swat.db.mongodb")
+@EnableMongoRepositories(basePackages = "org.swat.mongodb")
 public class Beans {
     @Bean("mongoTemplate")
     public MongoTemplate getMongoTemplate() {
