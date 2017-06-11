@@ -1,4 +1,4 @@
-package org.swat.db.cassandra;
+package org.swat.cassandra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,10 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
  */
 @Configuration
 @EnableCassandraRepositories(
-        basePackages = "org.swat.db.cassandra")
+        basePackages = "org.swat.cassandra")
 public class CassandraConfig extends AbstractCassandraConfiguration {
-
+    //CREATE  KEYSPACE IF NOT EXISTS testKeySpace WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 } AND DURABLE_WRITES =  true;
+//CREATE TABLE IF NOT EXISTS testKeySpace.PERSON ( id text PRIMARY KEY, name text, age int);
     @Override
     protected String getKeyspaceName() {
         return "testKeySpace";
@@ -27,7 +28,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         CassandraClusterFactoryBean cluster =
                 new CassandraClusterFactoryBean();
         cluster.setContactPoints("127.0.0.1");
-        cluster.setPort(9142);
+        cluster.setPort(9042);
         return cluster;
     }
 

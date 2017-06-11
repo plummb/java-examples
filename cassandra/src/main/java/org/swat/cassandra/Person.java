@@ -1,4 +1,4 @@
-package org.swat.db.cassandra;
+package org.swat.cassandra;
 
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;

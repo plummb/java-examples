@@ -1,6 +1,7 @@
-package org.swat.db.cassandra;
+package org.swat.cassandra;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.repository.support.BasicMapId;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -16,11 +17,11 @@ public class PersonServiceImpl {
 
     public Person insert(Person person) {
         person.setId(UUID.randomUUID().toString());
-        personRepository.save(person);
+        personRepository.insert(person);
         return person;
     }
 
     public Person findById(String id) {
-        return null;
+        return personRepository.findOne(BasicMapId.id("id", id));
     }
 }
