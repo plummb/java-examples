@@ -22,6 +22,10 @@
         <module>tutorial</module>
         <module>mongodb</module>
         <module>cassandra</module>
+        <module>neo4j</module>
+        <module>redis</module>
+        <module>dynamodb</module>
+        <module>couchbase</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
