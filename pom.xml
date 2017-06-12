@@ -53,6 +53,11 @@
                 <artifactId>spring-data-cassandra</artifactId>
                 <version>1.5.4.RELEASE</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-neo4j</artifactId>
+                <version>4.2.4.RELEASE</version>
+            </dependency>
 
             <!-- Spring Dependencies -->
             <dependency>
