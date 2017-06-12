@@ -16,8 +16,6 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 @EnableCassandraRepositories(
         basePackages = "org.swat.cassandra")
 public class CassandraConfig extends AbstractCassandraConfiguration {
-    //CREATE  KEYSPACE IF NOT EXISTS testKeySpace WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 } AND DURABLE_WRITES =  true;
-//CREATE TABLE IF NOT EXISTS testKeySpace.PERSON ( id text PRIMARY KEY, name text, age int);
     @Override
     protected String getKeyspaceName() {
         return "testKeySpace";
