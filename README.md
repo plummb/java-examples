@@ -1,9 +1,15 @@
-example
-=======
+# Contributors
+## Swatantra Agrawal
+### Email: swattu@gmail.com
+### LinkedIn: https://in.linkedin.com/in/aazad
 
-Contains examples for different technologies
+# About example
+## Contains examples for different technologies
+### Mongo DB
+### Cassandra
 
-Pre-requisites
-1. Java 8
-2. Maven 3.3.2
+#Pre-requisites
+## Java 8
+## Maven 3.3.2
+
 
