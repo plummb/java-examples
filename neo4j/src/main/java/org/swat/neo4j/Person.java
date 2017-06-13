@@ -16,7 +16,7 @@ public class Person {
     private String id;
     private String name;
 
-    @Relationship(type="ACTS_IN", direction = Relationship.INCOMING)
+    @Relationship(type = "ACTS_IN", direction = Relationship.INCOMING)
     private List<Person> children;
 
     public String getId() {
