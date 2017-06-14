@@ -7,7 +7,7 @@ import io.reactivex.Observable;
  * Created by swat
  * on 13/6/17.
  */
-public class Example {
+public class ReactiveXExample {
     public static void main(String[] args) {
         Flowable.just("Hello world").subscribe(System.out::println);
         String[] words = {
