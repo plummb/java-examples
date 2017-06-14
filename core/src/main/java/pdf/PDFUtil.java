@@ -1,4 +1,4 @@
-package org.swat.doc.pdf;
+package pdf;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
