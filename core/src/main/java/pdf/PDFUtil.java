@@ -28,7 +28,8 @@ public class PDFUtil {
         PDDocument document = null;
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(inFile);
+            final File inputFile = new File(inFile);
+            inputStream = new FileInputStream(inputFile);
             if (inFile.endsWith(".zip")) {
                 ZipInputStream zipInputStream = new ZipInputStream(inputStream);
                 zipInputStream.getNextEntry();
@@ -53,6 +54,7 @@ public class PDFUtil {
             }
             document.setAllSecurityToBeRemoved(true);
             document.save(saveAs);
+            saveAs.setLastModified(inputFile.lastModified());
         } catch (InvalidPasswordException e) {
             throw e;
         } catch (Exception e) {
