@@ -51,6 +51,7 @@ public class PDFUtil {
             } else {
                 saveAs = new File(outFile);
             }
+            document.setAllSecurityToBeRemoved(true);
             document.save(saveAs);
         } catch (InvalidPasswordException e) {
             throw e;
