@@ -11,7 +11,7 @@
         <version>1.5.2.RELEASE</version>
     </parent>
     <scm>
-        <developerConnection>scm:git:ssh://swattu@github.com/example.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:swattu/example.git</developerConnection>
     </scm>
     <properties>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
@@ -284,6 +284,21 @@
                 <version>2.7</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <tagNameFormat>mda-core-@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
