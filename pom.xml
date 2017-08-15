@@ -11,7 +11,7 @@
         <version>1.5.2.RELEASE</version>
     </parent>
     <scm>
-        <developerConnection>scm:git:https://https://github.com/swattu/example.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:swattu/example.git</developerConnection>
         <url>https://github.com/swattu/example</url>
     </scm>
     <properties>
