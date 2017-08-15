@@ -11,8 +11,7 @@
         <version>1.5.2.RELEASE</version>
     </parent>
     <scm>
-        <developerConnection>scm:git:git@github.com:swattu/example.git</developerConnection>
-        <url>https://github.com/swattu/example</url>
+        <developerConnection>scm:git:ssh://swattu@github.com/example.git</developerConnection>
     </scm>
     <properties>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
