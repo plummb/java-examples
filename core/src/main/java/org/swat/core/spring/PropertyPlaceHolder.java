@@ -17,40 +17,40 @@ import java.util.Properties;
  * on 25/11/14.
  */
 public class PropertyPlaceHolder extends PropertyPlaceholderConfigurer {
-    public static final String CONFIG_VARIABLE = "ENV_CONF";
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyPlaceHolder.class);
+  public static final String CONFIG_VARIABLE = "ENV_CONF";
+  private static final Logger LOGGER = LoggerFactory.getLogger(PropertyPlaceHolder.class);
 
-    public PropertyPlaceHolder() throws Exception {
-        setSystemPropertiesMode(SYSTEM_PROPERTIES_MODE_OVERRIDE);
-        setSearchSystemEnvironment(true);
-        Properties props = new Properties();
+  public PropertyPlaceHolder() throws Exception {
+    setSystemPropertiesMode(SYSTEM_PROPERTIES_MODE_OVERRIDE);
+    setSearchSystemEnvironment(true);
+    Properties props = new Properties();
 
-        String confFile = getProperty(CONFIG_VARIABLE, props, "dev.properties");
+    String confFile = getProperty(CONFIG_VARIABLE, props, "dev.properties");
 
-        File file = new File(confFile);
-        if (!file.exists()) {
-            LOGGER.error("Runtime file does not exist : " + confFile);
-            throw new Exception("Runtime file does not exist : " + confFile);
-        }
-        List<Resource> resources = new ArrayList<>();
-        resources.add(new FileSystemResource(file));
-        LOGGER.info("Environment configuration file is: " + confFile);
-
-        setLocations(resources.toArray(new Resource[resources.size()]));
+    File file = new File(confFile);
+    if (!file.exists()) {
+      LOGGER.error("Runtime file does not exist : " + confFile);
+      throw new Exception("Runtime file does not exist : " + confFile);
     }
+    List<Resource> resources = new ArrayList<>();
+    resources.add(new FileSystemResource(file));
+    LOGGER.info("Environment configuration file is: " + confFile);
 
-    public String getProperty(String key, Properties properties, String defaultValue) {
-        String value = System.getProperty(key);
-        if (StringUtils.isBlank(value)) {
-            value = System.getenv(key);
-        }
-        if (StringUtils.isBlank(value) && properties != null) {
-            value = properties.getProperty(key);
-        }
-        if (StringUtils.isBlank(value)) {
-            value = defaultValue;
-        }
-        return value;
+    setLocations(resources.toArray(new Resource[resources.size()]));
+  }
+
+  public String getProperty(String key, Properties properties, String defaultValue) {
+    String value = System.getProperty(key);
+    if (StringUtils.isBlank(value)) {
+      value = System.getenv(key);
     }
+    if (StringUtils.isBlank(value) && properties != null) {
+      value = properties.getProperty(key);
+    }
+    if (StringUtils.isBlank(value)) {
+      value = defaultValue;
+    }
+    return value;
+  }
 
 }
