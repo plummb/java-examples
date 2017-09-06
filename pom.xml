@@ -11,9 +11,10 @@
         <version>1.5.2.RELEASE</version>
     </parent>
     <scm>
-        <url>scm:git:ssh://git@github.com:swattu/example.git</url>
-        <connection>scm:git:ssh://git@github.com:swattu/example.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:swattu/example.git</developerConnection>
+        <connection>scm:git:ssh://git@bitbucket.org/swattu/java-examples.git</connection>
+        <developerConnection>scm:git:ssh://git@bitbucket.org/swattu/java-examples.git</developerConnection>
+        <url>https://bitbucket.org/swattu/java-examples</url>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
@@ -300,7 +301,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <tagNameFormat>mda-core-@{project.version}</tagNameFormat>
+                    <tagNameFormat>java-examples-@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
