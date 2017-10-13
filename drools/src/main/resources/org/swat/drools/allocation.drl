@@ -1,0 +1,57 @@
+package org.swat.drools
+dialect "mvel"
+
+import org.swat.drools.Order
+import org.swat.drools.OrderItem
+import org.swat.drools.AllocationService
+import java.util.Collection
+
+rule "Order Item when Product Tag=Electronics"
+salience 110
+when
+    order: Order(processed==false, orderItems:items)
+    allocationService: AllocationService()
+    eligibleItems: Collection() from collect(OrderItem(processed==false, tags contains "Electronics") from orderItems)
+    eval(eligibleItems.size()>0)
+then
+    for(Object object:eligibleItems){
+      OrderItem orderItem = (OrderItem)object;
+      orderItem.setProcessed(true);
+      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+    }
+end
+
+rule "Order when ALL Product Tag=Camera"
+salience 100
+when
+    order: Order(processed==false, orderItems:items)
+    allocationService: AllocationService()
+    pendingItems: Collection() from collect(OrderItem(processed==false) from orderItems)
+    eligibleItems: Collection() from collect(OrderItem(processed==false, tags contains "Camera") from orderItems)
+    eval(eligibleItems.size()>0 && eligibleItems.size() == pendingItems.size())
+then
+    for(Object object:pendingItems){
+      OrderItem orderItem = (OrderItem)object;
+      orderItem.setProcessed(true);
+      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+    }
+    order.setProcessed(true);
+end
+
+rule "Order when ANY Product Tag=Camera"
+salience 90
+when
+    order: Order(processed==false, orderItems:items)
+    allocationService: AllocationService()
+    pendingItems: Collection() from collect(OrderItem(processed==false) from orderItems)
+    eligibleItems: Collection() from collect(OrderItem(processed==false, tags contains "Camera") from orderItems)
+    eval(eligibleItems.size()>0)
+then
+    for(Object object:pendingItems){
+      OrderItem orderItem = (OrderItem)object;
+      orderItem.setProcessed(true);
+      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+    }
+    order.setProcessed(true);
+end
+

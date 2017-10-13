@@ -35,6 +35,7 @@
         <module>couchbase</module>
         <module>reactivex</module>
         <module>cosmos</module>
+        <module>drools</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
