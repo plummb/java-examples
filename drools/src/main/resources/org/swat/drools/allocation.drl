@@ -67,6 +67,6 @@ then
         processed = false;
       }
     }
-    order.setProcessed(true);
+    order.setProcessed(processed);
 end
 

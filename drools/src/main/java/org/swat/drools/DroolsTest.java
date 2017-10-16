@@ -1,14 +1,16 @@
 package org.swat.drools;
 
-import org.drools.compiler.compiler.PackageBuilder;
-import org.drools.core.RuleBase;
-import org.drools.core.RuleBaseFactory;
-import org.drools.core.WorkingMemory;
+import org.drools.core.impl.InternalKnowledgeBase;
+import org.drools.core.impl.KnowledgeBaseFactory;
+import org.kie.api.definition.KiePackage;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieSession;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
+import org.kie.internal.io.ResourceFactory;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,14 +22,16 @@ public class DroolsTest {
     }
 
     public void executeDrools() throws Exception {
-        PackageBuilder packageBuilder = new PackageBuilder();
+        InternalKnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+
         String ruleFile = "org/swat/drools/allocation.drl";
-        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(ruleFile);
-        Reader reader = new InputStreamReader(resourceAsStream);
-        packageBuilder.addPackageFromDrl(reader);
-        org.drools.core.rule.Package rulesPackage = packageBuilder.getPackage();
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase();
-        ruleBase.addPackage(rulesPackage);
+        kbuilder.add(ResourceFactory.newClassPathResource(ruleFile,
+                DroolsTest.class),
+                ResourceType.DRL);
+
+        Collection<KiePackage> pkgs = kbuilder.getKnowledgePackages();
+        kbase.addPackages(pkgs);
 
         System.out.println("Firing one by one");
         List<Order> orders = new ArrayList<>();
@@ -35,39 +39,39 @@ public class DroolsTest {
         order1.addItem(new OrderItem("Camera1", "Camera"));
         order1.addItem(new OrderItem("Camera2", "Camera"));
         orders.add(order1);
-        fireRules(ruleBase, order1);
+        fireRules(kbase, order1);
 
         Order order2 = new Order("One Camera", "Hyderabad");
         order2.addItem(new OrderItem("Camera3", "Camera"));
         order2.addItem(new OrderItem("Electronics1", "Electronics"));
         orders.add(order2);
-        fireRules(ruleBase, order2);
+        fireRules(kbase, order2);
 
         Order order3 = new Order("Multi Fridge", "Hyderabad");
         order3.addItem(new OrderItem("Camera4", "Camera"));
         order3.addItem(new OrderItem("Electronics2", "Electronics"));
         orders.add(order3);
-        fireRules(ruleBase, order3);
+        fireRules(kbase, order3);
 
         System.out.println("\n\nFiring all at one go");
         Collections.shuffle(orders);
-        fireRules(ruleBase, orders.toArray(new Order[0]));
+        fireRules(kbase, orders.toArray(new Order[0]));
         System.out.println("\n\nFiring all at one go once again");
         Collections.shuffle(orders);
-        fireRules(ruleBase, orders.toArray(new Order[0]));
+        fireRules(kbase, orders.toArray(new Order[0]));
     }
 
-    private void fireRules(RuleBase ruleBase, Order... objects) {
-        WorkingMemory workingMemory = ruleBase.newStatefulSession();
+    private void fireRules(InternalKnowledgeBase kbase, Order... objects) {
+        KieSession kieSession = kbase.newKieSession();
         for (Order object : objects) {
             object.setProcessed(false);
-            for(OrderItem orderItem:object.getItems()){
+            for (OrderItem orderItem : object.getItems()) {
                 orderItem.setProcessed(false);
             }
-            workingMemory.insert(object);
+            kieSession.insert(object);
         }
-        workingMemory.insert(new AllocationService());
-        workingMemory.fireAllRules();
+        kieSession.insert(new AllocationService());
+        kieSession.fireAllRules();
         System.out.println();
     }
 }
