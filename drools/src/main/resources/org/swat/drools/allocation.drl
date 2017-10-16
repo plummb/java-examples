@@ -16,8 +16,11 @@ when
 then
     for(Object object:eligibleItems){
       OrderItem orderItem = (OrderItem)object;
-      orderItem.setProcessed(true);
-      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+      String store = allocationService.allocate(orderItem);
+      if(store!=null){
+        System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+store);
+        orderItem.setProcessed(true);
+      }
     }
 end
 
@@ -30,12 +33,18 @@ when
     eligibleItems: Collection() from collect(OrderItem(processed==false, tags contains "Camera") from orderItems)
     eval(eligibleItems.size()>0 && eligibleItems.size() == pendingItems.size())
 then
+    boolean processed = true;
     for(Object object:pendingItems){
       OrderItem orderItem = (OrderItem)object;
-      orderItem.setProcessed(true);
-      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+      String store = allocationService.allocate(orderItem);
+      if(store!=null){
+        System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+store);
+        orderItem.setProcessed(true);
+      }else{
+        processed = false;
+      }
     }
-    order.setProcessed(true);
+    order.setProcessed(processed);
 end
 
 rule "Order when ANY Product Tag=Camera"
@@ -47,10 +56,16 @@ when
     eligibleItems: Collection() from collect(OrderItem(processed==false, tags contains "Camera") from orderItems)
     eval(eligibleItems.size()>0)
 then
+    boolean processed = true;
     for(Object object:pendingItems){
       OrderItem orderItem = (OrderItem)object;
-      orderItem.setProcessed(true);
-      System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+allocationService.allocate(orderItem));
+      String store = allocationService.allocate(orderItem);
+      if(store!=null){
+        System.out.println(orderItem.getName() +" of "+ order.getName() +" matches "+drools.getRule().getName() + " allocated to "+store);
+        orderItem.setProcessed(true);
+      }else{
+        processed = false;
+      }
     }
     order.setProcessed(true);
 end

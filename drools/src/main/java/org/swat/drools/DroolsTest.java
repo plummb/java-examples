@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DroolsTest {
@@ -49,8 +50,10 @@ public class DroolsTest {
         fireRules(ruleBase, order3);
 
         System.out.println("\n\nFiring all at one go");
+        Collections.shuffle(orders);
         fireRules(ruleBase, orders.toArray(new Order[0]));
         System.out.println("\n\nFiring all at one go once again");
+        Collections.shuffle(orders);
         fireRules(ruleBase, orders.toArray(new Order[0]));
     }
 
