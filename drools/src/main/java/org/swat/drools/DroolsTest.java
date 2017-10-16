@@ -22,16 +22,16 @@ public class DroolsTest {
     }
 
     public void executeDrools() throws Exception {
-        InternalKnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
-        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        InternalKnowledgeBase knowledgeBase = KnowledgeBaseFactory.newKnowledgeBase();
+        KnowledgeBuilder knowledgeBuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
         String ruleFile = "org/swat/drools/allocation.drl";
-        kbuilder.add(ResourceFactory.newClassPathResource(ruleFile,
+        knowledgeBuilder.add(ResourceFactory.newClassPathResource(ruleFile,
                 DroolsTest.class),
                 ResourceType.DRL);
 
-        Collection<KiePackage> pkgs = kbuilder.getKnowledgePackages();
-        kbase.addPackages(pkgs);
+        Collection<KiePackage> knowledgePackages = knowledgeBuilder.getKnowledgePackages();
+        knowledgeBase.addPackages(knowledgePackages);
 
         System.out.println("Firing one by one");
         List<Order> orders = new ArrayList<>();
@@ -39,30 +39,30 @@ public class DroolsTest {
         order1.addItem(new OrderItem("Camera1", "Camera"));
         order1.addItem(new OrderItem("Camera2", "Camera"));
         orders.add(order1);
-        fireRules(kbase, order1);
+        fireRules(knowledgeBase, order1);
 
         Order order2 = new Order("One Camera", "Hyderabad");
         order2.addItem(new OrderItem("Camera3", "Camera"));
         order2.addItem(new OrderItem("Electronics1", "Electronics"));
         orders.add(order2);
-        fireRules(kbase, order2);
+        fireRules(knowledgeBase, order2);
 
         Order order3 = new Order("Multi Fridge", "Hyderabad");
         order3.addItem(new OrderItem("Camera4", "Camera"));
         order3.addItem(new OrderItem("Electronics2", "Electronics"));
         orders.add(order3);
-        fireRules(kbase, order3);
+        fireRules(knowledgeBase, order3);
 
         System.out.println("\n\nFiring all at one go");
         Collections.shuffle(orders);
-        fireRules(kbase, orders.toArray(new Order[0]));
+        fireRules(knowledgeBase, orders.toArray(new Order[0]));
         System.out.println("\n\nFiring all at one go once again");
         Collections.shuffle(orders);
-        fireRules(kbase, orders.toArray(new Order[0]));
+        fireRules(knowledgeBase, orders.toArray(new Order[0]));
     }
 
-    private void fireRules(InternalKnowledgeBase kbase, Order... objects) {
-        KieSession kieSession = kbase.newKieSession();
+    private void fireRules(InternalKnowledgeBase knowledgeBase, Order... objects) {
+        KieSession kieSession = knowledgeBase.newKieSession();
         for (Order object : objects) {
             object.setProcessed(false);
             for (OrderItem orderItem : object.getItems()) {
