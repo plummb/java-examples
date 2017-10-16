@@ -5,19 +5,21 @@
 
 # About example
 ## Contains examples for different technologies
-### Mongo DB
 ### Cassandra
+### Cosmos
+### Drools
+### MongoDB
 ### ReactiveX
 
 ## Coming soon
+### Couchbase
+### DynamoDB
 ### Neo4j
 ### Redis
-### DynamoDB
-### Couchbase
 
 
 # Pre-requisites
 ## Java 8
-## Maven 3.3.2
+## Maven 3.3.9
 
 
