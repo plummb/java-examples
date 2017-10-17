@@ -12,6 +12,7 @@
 ### ReactiveX
 
 ## Coming soon
+### App Fabric
 ### Couchbase
 ### DynamoDB
 ### Neo4j

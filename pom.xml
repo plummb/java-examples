@@ -36,6 +36,7 @@
         <module>reactivex</module>
         <module>cosmos</module>
         <module>drools</module>
+        <module>appfabric</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
