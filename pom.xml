@@ -20,7 +20,6 @@
     <properties>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
         <spring.version>4.3.8.RELEASE</spring.version>
-        <jersey.version>2.7</jersey.version>
         <cassandra-driver.version>3.2.0</cassandra-driver.version>
         <joda-time.version>2.9.5</joda-time.version>
         <javax-validation.version>2.0.0.Final</javax-validation.version>
@@ -37,6 +36,7 @@
         <module>cosmos</module>
         <module>drools</module>
         <module>mockito</module>
+        <module>rest</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
