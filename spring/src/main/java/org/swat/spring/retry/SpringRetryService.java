@@ -4,18 +4,20 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.swat.core.utils.CoreRtException;
 
+import java.util.Date;
 import java.util.Random;
 
 @Service
 public class SpringRetryService {
     private static final Random RANDOM = new Random(System.nanoTime());
 
-    @Retryable(value = CoreRtException.class)
+    @Retryable(value = CoreRtException.class, interceptor = "retryInterceptor")
     public void hello() {
-        System.out.println("Calling Hello");
+        System.out.println(new Date() + " : Calling Hello");
         int x = RANDOM.nextInt(100);
-        if (x <= 50)
+        if (x <= 100) {
             throw new CoreRtException("Thrown intentionally");
+        }
         System.out.println("Hello successful");
     }
 }
