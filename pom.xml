@@ -37,6 +37,7 @@
         <module>drools</module>
         <module>mockito</module>
         <module>rest</module>
+        <module>spring</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
