@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.retry.annotation.EnableRetry;
 
+import java.util.Date;
+
 @SpringBootApplication
 @EnableRetry
 public class SpringRetryMain implements CommandLineRunner {
@@ -19,7 +21,11 @@ public class SpringRetryMain implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        springRetryService.hello();
+        try {
+            springRetryService.hello();
+        } catch (Exception e) {
+            System.out.println(new Date() + " : Exception Message - " + e.getMessage());
+        }
         System.exit(0);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Random;
 public class SpringRetryService {
     private static final Random RANDOM = new Random(System.nanoTime());
 
-    @Retryable(value = CoreRtException.class, interceptor = "retryInterceptor")
+    @Retryable(interceptor = "retryInterceptor")
     public void hello() {
         System.out.println(new Date() + " : Calling Hello");
         int x = RANDOM.nextInt(100);
