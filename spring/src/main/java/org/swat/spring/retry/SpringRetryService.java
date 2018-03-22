@@ -12,12 +12,13 @@ public class SpringRetryService {
     private static final Random RANDOM = new Random(System.nanoTime());
 
     @Retryable(interceptor = "retryInterceptor")
-    public void hello() {
-        System.out.println(new Date() + " : Calling Hello");
-        int x = RANDOM.nextInt(100);
-        if (x <= 100) {
-            throw new CoreRtException("Thrown intentionally");
-        }
-        System.out.println("Hello successful");
+    public void helloWithRetry() {
+        System.out.println(new Date() + " : Calling Hello with retry");
+        throw new CoreRtException("Thrown intentionally");
+    }
+
+    public void helloWithoutRetry() {
+        System.out.println(new Date() + " : Calling Hello without retry");
+        throw new CoreRtException("Thrown intentionally");
     }
 }

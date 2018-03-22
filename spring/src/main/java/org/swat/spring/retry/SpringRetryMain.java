@@ -22,7 +22,12 @@ public class SpringRetryMain implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         try {
-            springRetryService.hello();
+            springRetryService.helloWithRetry();
+        } catch (Exception e) {
+            System.out.println(new Date() + " : Exception Message - " + e.getMessage());
+        }
+        try {
+            springRetryService.helloWithoutRetry();
         } catch (Exception e) {
             System.out.println(new Date() + " : Exception Message - " + e.getMessage());
         }
