@@ -15,6 +15,7 @@ public class SpringRetryMain implements CommandLineRunner {
     private SpringRetryService springRetryService;
 
     public static void main(String[] args) {
+        System.setProperty("server.port", "8090");
         SpringApplication app = new SpringApplication(SpringRetryMain.class);
         app.run(args);
     }
