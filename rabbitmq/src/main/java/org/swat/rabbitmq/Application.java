@@ -39,9 +39,9 @@ public class Application {
     ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         //Provide the configuration here
-        connectionFactory.setHost("10.16.6.9");
-        connectionFactory.setUsername("admin");
-        connectionFactory.setPassword("admin");
+        connectionFactory.setHost("someIp");
+        connectionFactory.setUsername("userName");
+        connectionFactory.setPassword("password");
         com.rabbitmq.client.ConnectionFactory rabbitFactory = connectionFactory.getRabbitConnectionFactory();
         rabbitFactory.setAutomaticRecoveryEnabled(true);
         rabbitFactory.setNetworkRecoveryInterval(30000);
