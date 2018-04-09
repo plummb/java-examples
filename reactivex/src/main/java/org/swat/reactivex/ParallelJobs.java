@@ -17,21 +17,20 @@ public class ParallelJobs {
         List<Disposable> disposables = new ArrayList<>();
         AtomicInteger failures = new AtomicInteger(0);
         for (int x = 0; x < 10; x++) {
-            int index = x;
-            Disposable disposable1 = Observable.fromArray("1")
+            Disposable disposable = Observable.fromArray(x)
                     .observeOn(Schedulers.newThread())
                     .doOnError(s -> {
                         failures.incrementAndGet();
                     })
                     .subscribe(s -> {
                         try {
-                            System.out.println("Started " + index);
+                            System.out.println("Started thread #" + s);
                             Thread.sleep(1000);
-                            System.out.println("Completed " + index);
+                            System.out.println("Completed thread #" + s);
                         } catch (InterruptedException e) {
                         }
                     });
-            disposables.add(disposable1);
+            disposables.add(disposable);
         }
 
         try {
