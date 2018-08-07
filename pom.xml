@@ -40,6 +40,7 @@
         <module>rest</module>
         <module>spring</module>
         <module>rabbitmq</module>
+        <module>math</module>
     </modules>
     <packaging>pom</packaging>
     <dependencyManagement>
