@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.swat.jpa.base.EntityManagerFactoryListener;
 
 import java.util.List;
 
@@ -35,12 +34,12 @@ public class MultiTenantTest {
                 "(" +
                 "   EMPLOYEE_ID varchar(255) PRIMARY KEY NOT NULL" +
                 ")");
-        EntityManagerFactoryListener.set("1");
+        TenantContext.setTenantId("1");
         Employee employee = new Employee();
         employee.setId("1");
         repository.save(employee);
 
-        EntityManagerFactoryListener.set("2");
+        TenantContext.setTenantId("2");
         employee = new Employee();
         employee.setId("2");
         repository.save(employee);
@@ -49,7 +48,7 @@ public class MultiTenantTest {
         assertEquals(1, employees.size());
         assertEquals("2", employees.get(0).getId());
 
-        EntityManagerFactoryListener.set("1");
+        TenantContext.setTenantId("1");
         employees = repository.findAll();
         assertEquals(1, employees.size());
         assertEquals("1", employees.get(0).getId());
