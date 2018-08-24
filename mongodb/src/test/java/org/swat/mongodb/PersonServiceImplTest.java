@@ -41,4 +41,26 @@ public class PersonServiceImplTest {
         String collectionName = "tenant123_person";
         assertTrue(mongoTemplate.getCollectionNames().contains(collectionName));
     }
+
+    @Test
+    public void multiDbTest() throws Exception {
+        Person person = new Person();
+        person.setName("Swat");
+
+        TenantContext.setTenantId("1");
+        person = personService.insert(person);
+        assertEquals(1, mongoTemplate.getCollectionNames().size());
+
+        TenantContext.setTenantId("2");
+        person = personService.insert(person);
+        assertEquals(2, mongoTemplate.getCollectionNames().size());
+
+        TenantContext.setTenantId("3");
+        person = personService.insert(person);
+        assertEquals(1, mongoTemplate.getCollectionNames().size());
+
+        TenantContext.setTenantId("4");
+        person = personService.insert(person);
+        assertEquals(2, mongoTemplate.getCollectionNames().size());
+    }
 }
