@@ -8,17 +8,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "EMPLOYEE")
 @Multitenant(MultitenantType.TABLE_PER_TENANT)
-@IdClass(DummyId.class)
 public class Employee {
-    @Id
-    @Column(name = "EMPLOYEE_ID")
-    private String id;
+    @EmbeddedId
+    private DummyId id;
 
-    public String getId() {
+    public DummyId getId() {
         return id;
     }
 
-    public Employee setId(String id) {
+    public Employee setId(DummyId id) {
         this.id = id;
         return this;
     }
