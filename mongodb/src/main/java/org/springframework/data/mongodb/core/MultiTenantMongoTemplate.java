@@ -58,6 +58,11 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
+    String determineCollectionName(Class<?> entityClass) {
+        return resolveMongoTemplate().determineCollectionName(entityClass);
+    }
+
+    @Override
     public void setWriteResultChecking(WriteResultChecking resultChecking) {
         resolveMongoTemplate().setWriteResultChecking(resultChecking);
     }
