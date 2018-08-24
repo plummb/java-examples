@@ -1,11 +1,13 @@
 package org.swat.mongodb;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by swat
  * on 11/6/17.
  */
+@Document(collection = "#{ T(org.swat.mongodb.TenantContext).getTenantId()}_person")
 public class Person {
     @Id
     private String id;

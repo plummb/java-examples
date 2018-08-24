@@ -1,11 +1,13 @@
 package org.swat.mongodb;
 
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+
+import java.io.IOException;
 
 /**
  * Created by swat
@@ -14,10 +16,15 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @EnableMongoRepositories(basePackages = "org.swat.mongodb")
 public class Beans {
+    private static final String MONGO_DB_URL = "localhost";
+    private static final String MONGO_DB_NAME = "embeded_db";
+
     @Bean("mongoTemplate")
-    public MongoTemplate getMongoTemplate() {
-        //The settings should be externalized. Also lot of parameters need to be set.
-        Mongo mongo = new MongoClient("127.0.0.1");
-        return new MongoTemplate(mongo, "swat");
+    public MongoTemplate getMongoTemplate() throws IOException {
+        EmbeddedMongoFactoryBean mongo = new EmbeddedMongoFactoryBean();
+        mongo.setBindIp(MONGO_DB_URL);
+        MongoClient mongoClient = mongo.getObject();
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, MONGO_DB_NAME);
+        return mongoTemplate;
     }
 }
