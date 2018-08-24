@@ -1,12 +1,10 @@
 package org.swat.jpa.multitenant;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
 public class DummyId implements Serializable {
-    @Column(name = "EMPLOYEE_ID")
     private String id;
 
     public DummyId() {

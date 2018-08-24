@@ -36,22 +36,22 @@ public class MultiTenantTest {
                 ")");
         TenantContext.setTenantId("1");
         Employee employee = new Employee();
-        employee.setId(new DummyId("1"));
+        employee.setId("1");
         repository.save(employee);
         repository.findOne(new DummyId("1"));
 
         TenantContext.setTenantId("2");
         employee = new Employee();
-        employee.setId(new DummyId("2"));
+        employee.setId("2");
         repository.save(employee);
 
         List<Employee> employees = repository.findAll();
         assertEquals(1, employees.size());
-        assertEquals("2", employees.get(0).getId().getId());
+        assertEquals("2", employees.get(0).getId());
 
         TenantContext.setTenantId("1");
         employees = repository.findAll();
         assertEquals(1, employees.size());
-        assertEquals("1", employees.get(0).getId().getId());
+        assertEquals("1", employees.get(0).getId());
     }
 }
