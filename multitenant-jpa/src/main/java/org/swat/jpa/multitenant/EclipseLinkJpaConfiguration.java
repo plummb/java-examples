@@ -22,23 +22,23 @@ import static org.eclipse.persistence.config.PersistenceUnitProperties.CREATE_OR
 
 @Configuration
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
-  protected EclipseLinkJpaConfiguration(DataSource dataSource, JpaProperties properties,
-                                        ObjectProvider<JtaTransactionManager> jtaTransactionManager,
-                                        ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-    super(dataSource, properties, jtaTransactionManager, transactionManagerCustomizers);
-  }
+    protected EclipseLinkJpaConfiguration(DataSource dataSource, JpaProperties properties,
+                                          ObjectProvider<JtaTransactionManager> jtaTransactionManager,
+                                          ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
+        super(new MultiTenantDataSource(dataSource), properties, jtaTransactionManager, transactionManagerCustomizers);
+    }
 
-  @Override
-  protected AbstractJpaVendorAdapter createJpaVendorAdapter() {
-    return new EclipseLinkJpaVendorAdapter();
-  }
+    @Override
+    protected AbstractJpaVendorAdapter createJpaVendorAdapter() {
+        return new EclipseLinkJpaVendorAdapter();
+    }
 
-  @Override
-  protected Map<String, Object> getVendorProperties() {
-    HashMap<String, Object> map = new HashMap<>();
-    map.put(PersistenceUnitProperties.WEAVING, "false");
-    map.put(PersistenceUnitProperties.DDL_GENERATION, CREATE_OR_EXTEND);
-    map.put("eclipselink.logging.level.sql", "FINE");
-    return map;
-  }
+    @Override
+    protected Map<String, Object> getVendorProperties() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(PersistenceUnitProperties.WEAVING, "false");
+        map.put(PersistenceUnitProperties.DDL_GENERATION, CREATE_OR_EXTEND);
+        map.put("eclipselink.logging.level.sql", "FINE");
+        return map;
+    }
 }
