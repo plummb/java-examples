@@ -5,6 +5,7 @@
 package org.swat.jpa.multitenant;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.eclipse.persistence.logging.LogLevel;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -18,7 +19,9 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.eclipse.persistence.config.PersistenceUnitProperties.CATEGORY_LOGGING_LEVEL_;
 import static org.eclipse.persistence.config.PersistenceUnitProperties.CREATE_OR_EXTEND;
+import static org.eclipse.persistence.logging.SessionLog.SQL;
 
 @Configuration
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
@@ -38,7 +41,7 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
         HashMap<String, Object> map = new HashMap<>();
         map.put(PersistenceUnitProperties.WEAVING, "false");
         map.put(PersistenceUnitProperties.DDL_GENERATION, CREATE_OR_EXTEND);
-        map.put("eclipselink.logging.level.sql", "FINE");
+        map.put(CATEGORY_LOGGING_LEVEL_ + SQL, LogLevel.FINE.getName());
         return map;
     }
 }
