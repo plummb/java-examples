@@ -19,13 +19,16 @@ import static org.junit.Assert.assertEquals;
 @ComponentScan(basePackages = {"org.swat.jpa"})
 public class MultiTenantTest {
     @Autowired
-    private EmployeeRepository repository;
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    public void checkMultiTenant() {
+    public void perTable() {
         jdbcTemplate.execute("CREATE TABLE EMPLOYEE_1" +
                 "(" +
                 "   EMPLOYEE_ID varchar(255) PRIMARY KEY NOT NULL" +
@@ -37,21 +40,43 @@ public class MultiTenantTest {
         TenantContext.setTenantId("1");
         Employee employee = new Employee();
         employee.setId("1");
-        repository.save(employee);
-        repository.findOne(new DummyId("1"));
+        employeeRepository.save(employee);
+        employeeRepository.findOne(new DummyId("1"));
 
         TenantContext.setTenantId("2");
         employee = new Employee();
         employee.setId("2");
-        repository.save(employee);
+        employeeRepository.save(employee);
 
-        List<Employee> employees = repository.findAll();
+        List<Employee> employees = employeeRepository.findAll();
         assertEquals(1, employees.size());
         assertEquals("2", employees.get(0).getId());
 
         TenantContext.setTenantId("1");
-        employees = repository.findAll();
+        employees = employeeRepository.findAll();
         assertEquals(1, employees.size());
         assertEquals("1", employees.get(0).getId());
+    }
+    @Test
+    public void singleTable() {
+        TenantContext.setTenantId("1");
+        Department department = new Department();
+        department.setId("1");
+        departmentRepository.save(department);
+        departmentRepository.findOne(new DummyId("1"));
+
+        TenantContext.setTenantId("2");
+        department = new Department();
+        department.setId("2");
+        departmentRepository.save(department);
+
+        List<Department> departments = departmentRepository.findAll();
+        assertEquals(1, departments.size());
+        assertEquals("2", departments.get(0).getId());
+
+        TenantContext.setTenantId("1");
+        departments = departmentRepository.findAll();
+        assertEquals(1, departments.size());
+        assertEquals("1", departments.get(0).getId());
     }
 }
