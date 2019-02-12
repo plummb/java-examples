@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
 @EntityScan("org.swat.jpa.multitenant")
-@ComponentScan(basePackages = {"org.swat.jpa"})
+@ComponentScan(basePackages = {"org.swat.jpa.multitenant"})
 public class RollbackTest {
     @Autowired
     private DepartmentService departmentService;
