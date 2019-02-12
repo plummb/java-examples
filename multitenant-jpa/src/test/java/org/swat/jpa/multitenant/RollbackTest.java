@@ -28,7 +28,7 @@ public class RollbackTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    public void singleTable() {
+    public void rollback() {
         TenantContext.setTenantId("1");
         Department department = new Department();
         department.setId("1");
@@ -37,8 +37,6 @@ public class RollbackTest {
         } catch (RuntimeException e) {
             System.out.println("Rolled back");
         }
-        departmentRepository.findOne(new DummyId("1"));
-
         List<Department> departments = departmentRepository.findAll();
         assertEquals(0, departments.size());
 
