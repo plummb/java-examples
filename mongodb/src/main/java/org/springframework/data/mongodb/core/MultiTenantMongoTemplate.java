@@ -1,10 +1,15 @@
 package org.springframework.data.mongodb.core;
 
-import com.mongodb.*;
-import org.bson.types.ObjectId;
+import com.mongodb.MongoClient;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -13,7 +18,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoWriter;
-import org.springframework.data.mongodb.core.mapping.event.MongoMappingEvent;
+import org.springframework.data.mongodb.core.index.IndexOperations;
 import org.springframework.data.mongodb.core.mapreduce.GroupBy;
 import org.springframework.data.mongodb.core.mapreduce.GroupByResults;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
@@ -31,14 +36,9 @@ import java.util.Set;
 public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     private final MongoTemplate globalTemplate;
 
-    public MultiTenantMongoTemplate(Mongo mongo, String databaseName) {
+    public MultiTenantMongoTemplate(MongoClient mongo, String databaseName) {
         super(mongo, databaseName);
         globalTemplate = new MongoTemplate(mongo, databaseName);
-    }
-
-    public MultiTenantMongoTemplate(Mongo mongo, String databaseName, UserCredentials userCredentials) {
-        super(mongo, databaseName, userCredentials);
-        globalTemplate = new MongoTemplate(mongo, databaseName, userCredentials);
     }
 
     public MultiTenantMongoTemplate(MongoDbFactory mongoDbFactory) {
@@ -55,11 +55,6 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
 
     public MongoTemplate getGlobalTemplate() {
         return globalTemplate;
-    }
-
-    @Override
-    String determineCollectionName(Class<?> entityClass) {
-        return resolveMongoTemplate().determineCollectionName(entityClass);
     }
 
     @Override
@@ -108,28 +103,8 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
-    public CommandResult executeCommand(String jsonCommand) {
+    public Document executeCommand(String jsonCommand) {
         return resolveMongoTemplate().executeCommand(jsonCommand);
-    }
-
-    @Override
-    public CommandResult executeCommand(DBObject command) {
-        return resolveMongoTemplate().executeCommand(command);
-    }
-
-    @Override
-    public CommandResult executeCommand(DBObject command, int options) {
-        return resolveMongoTemplate().executeCommand(command, options);
-    }
-
-    @Override
-    public CommandResult executeCommand(DBObject command, ReadPreference readPreference) {
-        return resolveMongoTemplate().executeCommand(command, readPreference);
-    }
-
-    @Override
-    protected void logCommandExecutionError(DBObject command, CommandResult result) {
-        resolveMongoTemplate().logCommandExecutionError(command, result);
     }
 
     @Override
@@ -158,32 +133,27 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
-    public <T> T executeInSession(DbCallback<T> action) {
-        return resolveMongoTemplate().executeInSession(action);
-    }
-
-    @Override
-    public <T> DBCollection createCollection(Class<T> entityClass) {
+    public <T> MongoCollection<Document> createCollection(Class<T> entityClass) {
         return resolveMongoTemplate().createCollection(entityClass);
     }
 
     @Override
-    public <T> DBCollection createCollection(Class<T> entityClass, CollectionOptions collectionOptions) {
+    public <T> MongoCollection<Document> createCollection(Class<T> entityClass, CollectionOptions collectionOptions) {
         return resolveMongoTemplate().createCollection(entityClass, collectionOptions);
     }
 
     @Override
-    public DBCollection createCollection(String collectionName) {
+    public MongoCollection<Document> createCollection(String collectionName) {
         return resolveMongoTemplate().createCollection(collectionName);
     }
 
     @Override
-    public DBCollection createCollection(String collectionName, CollectionOptions collectionOptions) {
+    public MongoCollection<Document> createCollection(String collectionName, CollectionOptions collectionOptions) {
         return resolveMongoTemplate().createCollection(collectionName, collectionOptions);
     }
 
     @Override
-    public DBCollection getCollection(String collectionName) {
+    public MongoCollection<Document> getCollection(String collectionName) {
         return resolveMongoTemplate().getCollection(collectionName);
     }
 
@@ -338,13 +308,13 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
-    public void insert(Object objectToSave) {
-        resolveMongoTemplate().insert(objectToSave);
+    public <T> T insert(T objectToSave) {
+        return resolveMongoTemplate().insert(objectToSave);
     }
 
     @Override
-    public void insert(Object objectToSave, String collectionName) {
-        resolveMongoTemplate().insert(objectToSave, collectionName);
+    public <T> T insert(T objectToSave, String collectionName) {
+        return resolveMongoTemplate().insert(objectToSave, collectionName);
     }
 
     @Override
@@ -353,153 +323,112 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
-    protected void prepareCollection(DBCollection collection) {
-        resolveMongoTemplate().prepareCollection(collection);
-    }
-
-    @Override
     protected WriteConcern prepareWriteConcern(MongoAction mongoAction) {
         return resolveMongoTemplate().prepareWriteConcern(mongoAction);
     }
 
     @Override
-    protected <T> void doInsert(String collectionName, T objectToSave, MongoWriter<T> writer) {
-        resolveMongoTemplate().doInsert(collectionName, objectToSave, writer);
+    protected <T> T doInsert(String collectionName, T objectToSave, MongoWriter<T> writer) {
+        return resolveMongoTemplate().doInsert(collectionName, objectToSave, writer);
     }
 
     @Override
-    public void insert(Collection<?> batchToSave, Class<?> entityClass) {
-        resolveMongoTemplate().insert(batchToSave, entityClass);
+    protected <T> Collection<T> doInsertAll(Collection<? extends T> listToSave, MongoWriter<T> writer) {
+        return resolveMongoTemplate().doInsertAll(listToSave, writer);
     }
 
     @Override
-    public void insert(Collection<?> batchToSave, String collectionName) {
-        resolveMongoTemplate().insert(batchToSave, collectionName);
+    protected <T> Collection<T> doInsertBatch(String collectionName, Collection<? extends T> batchToSave, MongoWriter<T> writer) {
+        return resolveMongoTemplate().doInsertBatch(collectionName, batchToSave, writer);
     }
 
     @Override
-    public void insertAll(Collection<?> objectsToSave) {
-        resolveMongoTemplate().insertAll(objectsToSave);
+    public <T> T save(T objectToSave) {
+        return resolveMongoTemplate().save(objectToSave);
     }
 
     @Override
-    protected <T> void doInsertAll(Collection<? extends T> listToSave, MongoWriter<T> writer) {
-        resolveMongoTemplate().doInsertAll(listToSave, writer);
+    public <T> T save(T objectToSave, String collectionName) {
+        return resolveMongoTemplate().save(objectToSave, collectionName);
     }
 
     @Override
-    protected <T> void doInsertBatch(String collectionName, Collection<? extends T> batchToSave, MongoWriter<T> writer) {
-        resolveMongoTemplate().doInsertBatch(collectionName, batchToSave, writer);
+    protected <T> T doSave(String collectionName, T objectToSave, MongoWriter<T> writer) {
+        return resolveMongoTemplate().doSave(collectionName, objectToSave, writer);
     }
 
     @Override
-    public void save(Object objectToSave) {
-        resolveMongoTemplate().save(objectToSave);
-    }
-
-    @Override
-    public void save(Object objectToSave, String collectionName) {
-        resolveMongoTemplate().save(objectToSave, collectionName);
-    }
-
-    @Override
-    protected <T> void doSave(String collectionName, T objectToSave, MongoWriter<T> writer) {
-        resolveMongoTemplate().doSave(collectionName, objectToSave, writer);
-    }
-
-    @Override
-    protected Object insertDBObject(String collectionName, DBObject dbDoc, Class<?> entityClass) {
-        return resolveMongoTemplate().insertDBObject(collectionName, dbDoc, entityClass);
-    }
-
-    @Override
-    protected List<ObjectId> insertDBObjectList(String collectionName, List<DBObject> dbDocList) {
-        return resolveMongoTemplate().insertDBObjectList(collectionName, dbDocList);
-    }
-
-    @Override
-    protected Object saveDBObject(String collectionName, DBObject dbDoc, Class<?> entityClass) {
-        return resolveMongoTemplate().saveDBObject(collectionName, dbDoc, entityClass);
-    }
-
-    @Override
-    public WriteResult upsert(Query query, Update update, Class<?> entityClass) {
+    public UpdateResult upsert(Query query, Update update, Class<?> entityClass) {
         return resolveMongoTemplate().upsert(query, update, entityClass);
     }
 
     @Override
-    public WriteResult upsert(Query query, Update update, String collectionName) {
+    public UpdateResult upsert(Query query, Update update, String collectionName) {
         return resolveMongoTemplate().upsert(query, update, collectionName);
     }
 
     @Override
-    public WriteResult upsert(Query query, Update update, Class<?> entityClass, String collectionName) {
+    public UpdateResult upsert(Query query, Update update, Class<?> entityClass, String collectionName) {
         return resolveMongoTemplate().upsert(query, update, entityClass, collectionName);
     }
 
     @Override
-    public WriteResult updateFirst(Query query, Update update, Class<?> entityClass) {
+    public UpdateResult updateFirst(Query query, Update update, Class<?> entityClass) {
         return resolveMongoTemplate().updateFirst(query, update, entityClass);
     }
 
     @Override
-    public WriteResult updateFirst(Query query, Update update, String collectionName) {
+    public UpdateResult updateFirst(Query query, Update update, String collectionName) {
         return resolveMongoTemplate().updateFirst(query, update, collectionName);
     }
 
     @Override
-    public WriteResult updateFirst(Query query, Update update, Class<?> entityClass, String collectionName) {
+    public UpdateResult updateFirst(Query query, Update update, Class<?> entityClass, String collectionName) {
         return resolveMongoTemplate().updateFirst(query, update, entityClass, collectionName);
     }
 
     @Override
-    public WriteResult updateMulti(Query query, Update update, Class<?> entityClass) {
+    public UpdateResult updateMulti(Query query, Update update, Class<?> entityClass) {
         return resolveMongoTemplate().updateMulti(query, update, entityClass);
     }
 
     @Override
-    public WriteResult updateMulti(Query query, Update update, String collectionName) {
+    public UpdateResult updateMulti(Query query, Update update, String collectionName) {
         return resolveMongoTemplate().updateMulti(query, update, collectionName);
     }
 
     @Override
-    public WriteResult updateMulti(Query query, Update update, Class<?> entityClass, String collectionName) {
+    public UpdateResult updateMulti(Query query, Update update, Class<?> entityClass, String collectionName) {
         return resolveMongoTemplate().updateMulti(query, update, entityClass, collectionName);
     }
 
-    @Override
-    protected WriteResult doUpdate(String collectionName, Query query, Update update, Class<?> entityClass, boolean upsert, boolean multi) {
+    protected UpdateResult doUpdate(String collectionName, Query query, Update update, Class<?> entityClass, boolean upsert, boolean multi) {
         return resolveMongoTemplate().doUpdate(collectionName, query, update, entityClass, upsert, multi);
     }
 
     @Override
-    public WriteResult remove(Object object) {
+    public DeleteResult remove(Object object) {
         return resolveMongoTemplate().remove(object);
     }
 
     @Override
-    public WriteResult remove(Object object, String collection) {
+    public DeleteResult remove(Object object, String collection) {
         return resolveMongoTemplate().remove(object, collection);
     }
 
     @Override
-    public WriteResult remove(Query query, String collectionName) {
+    public DeleteResult remove(Query query, String collectionName) {
         return resolveMongoTemplate().remove(query, collectionName);
     }
 
     @Override
-    public WriteResult remove(Query query, Class<?> entityClass) {
+    public DeleteResult remove(Query query, Class<?> entityClass) {
         return resolveMongoTemplate().remove(query, entityClass);
     }
 
     @Override
-    public WriteResult remove(Query query, Class<?> entityClass, String collectionName) {
+    public DeleteResult remove(Query query, Class<?> entityClass, String collectionName) {
         return resolveMongoTemplate().remove(query, entityClass, collectionName);
-    }
-
-    @Override
-    protected <T> WriteResult doRemove(String collectionName, Query query, Class<T> entityClass) {
-        return resolveMongoTemplate().doRemove(collectionName, query, entityClass);
     }
 
     @Override
@@ -598,62 +527,12 @@ public abstract class MultiTenantMongoTemplate extends MongoTemplate {
     }
 
     @Override
-    public DB getDb() {
+    public MongoDatabase getDb() {
         return resolveMongoTemplate().getDb();
     }
 
     @Override
-    protected <T> void maybeEmitEvent(MongoMappingEvent<T> event) {
-        resolveMongoTemplate().maybeEmitEvent(event);
-    }
-
-    @Override
-    protected DBCollection doCreateCollection(String collectionName, DBObject collectionOptions) {
-        return resolveMongoTemplate().doCreateCollection(collectionName, collectionOptions);
-    }
-
-    @Override
-    protected <T> T doFindOne(String collectionName, DBObject query, DBObject fields, Class<T> entityClass) {
-        return resolveMongoTemplate().doFindOne(collectionName, query, fields, entityClass);
-    }
-
-    @Override
-    protected <T> List<T> doFind(String collectionName, DBObject query, DBObject fields, Class<T> entityClass) {
-        return resolveMongoTemplate().doFind(collectionName, query, fields, entityClass);
-    }
-
-    @Override
-    protected <T> List<T> doFind(String collectionName, DBObject query, DBObject fields, Class<T> entityClass, CursorPreparer preparer) {
-        return resolveMongoTemplate().doFind(collectionName, query, fields, entityClass, preparer);
-    }
-
-    @Override
-    protected <S, T> List<T> doFind(String collectionName, DBObject query, DBObject fields, Class<S> entityClass, CursorPreparer preparer, MongoTemplate.DbObjectCallback<T> objectCallback) {
-        return resolveMongoTemplate().doFind(collectionName, query, fields, entityClass, preparer, objectCallback);
-    }
-
-    @Override
-    protected DBObject convertToDbObject(CollectionOptions collectionOptions) {
-        return resolveMongoTemplate().convertToDbObject(collectionOptions);
-    }
-
-    @Override
-    protected <T> T doFindAndRemove(String collectionName, DBObject query, DBObject fields, DBObject sort, Class<T> entityClass) {
-        return resolveMongoTemplate().doFindAndRemove(collectionName, query, fields, sort, entityClass);
-    }
-
-    @Override
-    protected <T> T doFindAndModify(String collectionName, DBObject query, DBObject fields, DBObject sort, Class<T> entityClass, Update update, FindAndModifyOptions options) {
-        return resolveMongoTemplate().doFindAndModify(collectionName, query, fields, sort, entityClass, update, options);
-    }
-
-    @Override
-    protected void populateIdIfNecessary(Object savedObject, Object id) {
-        resolveMongoTemplate().populateIdIfNecessary(savedObject, id);
-    }
-
-    @Override
-    protected void handleAnyWriteResultErrors(WriteResult writeResult, DBObject query, MongoActionOperation operation) {
-        resolveMongoTemplate().handleAnyWriteResultErrors(writeResult, query, operation);
+    protected <T> T populateIdIfNecessary(T savedObject, Object id) {
+        return resolveMongoTemplate().populateIdIfNecessary(savedObject, id);
     }
 }

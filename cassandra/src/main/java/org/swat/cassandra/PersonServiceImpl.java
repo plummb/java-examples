@@ -22,6 +22,6 @@ public class PersonServiceImpl {
     }
 
     public Person findById(String id) {
-        return personRepository.findOne(BasicMapId.id("id", id));
+        return personRepository.findById(BasicMapId.id("id", id)).orElse(null);
     }
 }

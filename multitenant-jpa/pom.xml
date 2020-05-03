@@ -8,9 +8,6 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <properties>
-        <jpa.agent.version>2.0.2</jpa.agent.version>
-    </properties>
 
     <artifactId>multitenant-jpa</artifactId>
     <dependencies>
@@ -36,7 +33,7 @@
         <dependency>
             <groupId>org.bitbucket.swattu</groupId>
             <artifactId>jpa-agent</artifactId>
-            <version>${jpa.agent.version}</version>
+            <version>${swat.utils.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -66,7 +63,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
                 <configuration>
-                    <argLine>-javaagent:${project.basedir}/target/dependency/jpa-agent-${jpa.agent.version}.jar
+                    <argLine>-javaagent:${project.basedir}/target/dependency/jpa-agent-${swat.utils.version}.jar
                     </argLine>
                 </configuration>
             </plugin>

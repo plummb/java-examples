@@ -41,7 +41,7 @@ public class MultiTenantTest {
         Employee employee = new Employee();
         employee.setId("1");
         employeeRepository.save(employee);
-        employeeRepository.findOne(new DummyId("1"));
+        employeeRepository.getOne(new DummyId("1"));
 
         TenantContext.setTenantId("2");
         employee = new Employee();
@@ -63,7 +63,7 @@ public class MultiTenantTest {
         Department department = new Department();
         department.setId("1");
         departmentRepository.save(department);
-        departmentRepository.findOne(new DummyId("1"));
+        departmentRepository.getOne(new DummyId("1"));
 
         TenantContext.setTenantId("2");
         department = new Department();

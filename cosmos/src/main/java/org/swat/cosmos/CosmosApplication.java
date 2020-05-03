@@ -22,7 +22,7 @@ public class CosmosApplication implements CommandLineRunner {
         repository.deleteAll();
         repository.save(testUser);
 
-        final User result = repository.findOne(testUser.getId());
+        final User result = repository.findById(testUser.getId()).orElse(null);
 
         System.out.printf("\n\n%s\n\n", result.toString());
     }

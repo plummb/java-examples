@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import static org.swat.json.utils.JsonConstants.JSON_UTIL_8;
+import static org.swat.json.utils.JsonConstants.JSON_UTIL;
 
 /**
  * Client to connect to Resile Server
@@ -24,7 +24,7 @@ public class HttpClient {
     public <T> T getResponse(String url, Object obj, String method, Class<T> clazz) {
         CloseableHttpClient client = DHttpClient.getDefaultApacheClient();
         HttpRequestBase httpMethod = new HttpPost(url);
-        String requestJson = JSON_UTIL_8.toJsonString(obj);
+        String requestJson = JSON_UTIL.toJsonString(obj);
         StringEntity entity = new StringEntity(requestJson, ContentType.APPLICATION_JSON);
         switch (method){
             case "GET":
@@ -42,7 +42,7 @@ public class HttpClient {
             CloseableHttpResponse response = client.execute(httpMethod);
             HttpEntity responseEntity = response.getEntity();
             String strResponse = EntityUtils.toString(responseEntity);
-            return JSON_UTIL_8.readObject(strResponse, clazz);
+            return JSON_UTIL.readObject(strResponse, clazz);
         } catch (Exception e) {
             e.printStackTrace();
         }

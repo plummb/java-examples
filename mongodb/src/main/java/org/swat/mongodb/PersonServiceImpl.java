@@ -21,6 +21,6 @@ public class PersonServiceImpl {
     }
 
     public Person findById(String id) {
-        return personRepository.findOne(id);
+        return personRepository.findById(id).orElse(null);
     }
 }

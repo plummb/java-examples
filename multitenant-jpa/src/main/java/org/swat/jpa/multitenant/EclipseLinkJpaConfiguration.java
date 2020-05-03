@@ -9,7 +9,6 @@ import org.eclipse.persistence.logging.LogLevel;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
@@ -26,9 +25,8 @@ import static org.eclipse.persistence.logging.SessionLog.SQL;
 @Configuration
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
     protected EclipseLinkJpaConfiguration(DataSource dataSource, JpaProperties properties,
-                                          ObjectProvider<JtaTransactionManager> jtaTransactionManager,
-                                          ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        super(new MultiTenantDataSource(dataSource), properties, jtaTransactionManager, transactionManagerCustomizers);
+                                          ObjectProvider<JtaTransactionManager> jtaTransactionManager) {
+        super(new MultiTenantDataSource(dataSource), properties, jtaTransactionManager);
     }
 
     @Override
